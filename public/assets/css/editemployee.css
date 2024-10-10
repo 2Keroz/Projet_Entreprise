@@ -104,11 +104,6 @@ body, html {
     text-decoration: none;
   }
   
-  a:focus,
-  a:hover {
-    text-decoration: underline;
-  }
-  
   /* modules/form.css */
   
   :root {
