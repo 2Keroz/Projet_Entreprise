@@ -1,57 +1,106 @@
 const employeeRouter = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
 const authguard = require('../../services/authguard');
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
+// Fonction pour échapper les caractères spéciaux
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+// Regex patterns
+const nomPrenomRegex = /^[a-zA-ZÀ-ÿ-' ]{2,50}$/;
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 employeeRouter.get('/employe', authguard, async (req, res) => {
     try {
-        // Supposons que vous stockez l'entreprise dans la session après la connexion
-        const entrepriseId = req.session.entreprise.id; // Obtenez l'ID de l'entreprise à partir de la session
-
+        const entrepriseId = req.session.entreprise.id;
         const entreprise = await prisma.entreprise.findUnique({
             where: { id: entrepriseId }
         });
-
-        res.render("pages/employee.twig", { entreprise }); // Passer l'entreprise au template
+        res.render("pages/employee.twig", { entreprise });
     } catch (error) {
         console.log("Vous devez être connecté pour accéder à cette page !");
         res.redirect("/login");
     }
 });
 
-
-// Route pour créer un employé
 employeeRouter.post("/employe", authguard, async (req, res) => {
     try {
-        if (req.body.password === req.body.confirm_password) {
-            const hashedPassword = await bcrypt.hash(req.body.password, 10);
-            const employe = await prisma.employe.create({
-                data: {
-                    nom: req.body.nom,
-                    prenom: req.body.prenom,
-                    mail: req.body.mail,
-                    age: parseInt(req.body.age, 10), // Assurez-vous que l'âge est un nombre
-                    motDePasse: hashedPassword,
-                    entreprise: {
-                        connect: { id: parseInt(req.body.entrepriseId, 10) } // Connecter l'employé à l'entreprise sélectionnée
-                    }
-                }
-            });
-            console.log("Employé créé avec succès :", employe);
-            res.redirect("/");
-        } else {
-            throw { confirm_password: "Les mots de passe ne correspondent pas" };
+        const errors = {};
+
+        // Validate nom
+        if (!nomPrenomRegex.test(req.body.nom)) {
+            errors.nom = "Le nom doit contenir entre 2 et 50 caractères alphabétiques.";
         }
+
+        // Validate prenom
+        if (!nomPrenomRegex.test(req.body.prenom)) {
+            errors.prenom = "Le prénom doit contenir entre 2 et 50 caractères alphabétiques.";
+        }
+
+        // Validate email
+        if (!emailRegex.test(req.body.mail)) {
+            errors.mail = "L'adresse email n'est pas valide.";
+        }
+
+        // Validate age
+        const age = parseInt(req.body.age, 10);
+        if (isNaN(age) || age < 18 || age > 100) {
+            errors.age = "L'âge doit être un nombre entre 18 et 100.";
+        }
+
+        // Validate password
+        if (!passwordRegex.test(req.body.password)) {
+            errors.password = "Le mot de passe doit contenir au moins 8 caractères, incluant une majuscule, une minuscule, un chiffre et un caractère spécial.";
+        }
+
+        // Check if passwords match
+        if (req.body.password !== req.body.confirm_password) {
+            errors.confirm_password = "Les mots de passe ne correspondent pas.";
+        }
+
+        // If there are errors, render the page with errors
+        if (Object.keys(errors).length > 0) {
+            const entreprise = await prisma.entreprise.findUnique({
+                where: { id: parseInt(req.body.entrepriseId, 10) }
+            });
+            return res.render("pages/employee.twig", { errors, entreprise });
+        }
+
+        // If validation passes, create the employee
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const employe = await prisma.employe.create({
+            data: {
+                nom: escapeHtml(req.body.nom),
+                prenom: escapeHtml(req.body.prenom),
+                mail: escapeHtml(req.body.mail),
+                age: age,
+                motDePasse: hashedPassword,
+                entreprise: {
+                    connect: { id: parseInt(req.body.entrepriseId, 10) }
+                }
+            }
+        });
+        console.log("Employé créé avec succès :", employe);
+        res.redirect("/");
     } catch (error) {
         console.log(error);
-        res.render("pages/employee.twig", { error: error, title: "Inscription employé", entreprises: await prisma.entreprise.findMany() }); // Passer les entreprises en cas d'erreur
+        const entreprise = await prisma.entreprise.findUnique({
+            where: { id: parseInt(req.body.entrepriseId, 10) }
+        });
+        res.render("pages/employee.twig", { error: "Une erreur est survenue lors de la création de l'employé.", entreprise });
     }
 });
 
-
-// Route pour modifier un employé (affichage du formulaire de modification)
 employeeRouter.get('/editEmploye/:id', authguard, async (req, res) => {
     try {
         const employeId = parseInt(req.params.id, 10);
@@ -66,16 +115,32 @@ employeeRouter.get('/editEmploye/:id', authguard, async (req, res) => {
     }
 });
 
-// Route pour traiter la modification de l'employé
 employeeRouter.post('/editEmploye/:id', authguard, async (req, res) => {
     try {
         const employeId = parseInt(req.params.id, 10);
         const { nom, prenom, mail, age } = req.body;
 
+        // Validate inputs
+        const errors = {};
+        if (!nomPrenomRegex.test(nom)) errors.nom = "Le nom n'est pas valide.";
+        if (!nomPrenomRegex.test(prenom)) errors.prenom = "Le prénom n'est pas valide.";
+        if (!emailRegex.test(mail)) errors.mail = "L'adresse email n'est pas valide.";
+        const ageInt = parseInt(age, 10);
+        if (isNaN(ageInt) || ageInt < 18 || ageInt > 100) errors.age = "L'âge doit être entre 18 et 100.";
+
+        if (Object.keys(errors).length > 0) {
+            const employe = await prisma.employe.findUnique({ where: { id: employeId } });
+            return res.render("pages/editEmployee.twig", { employe, errors });
+        }
+
         await prisma.employe.update({
             where: { id: employeId },
-            data: { nom, prenom, mail, age: parseInt(age) }
-
+            data: { 
+                nom: escapeHtml(nom), 
+                prenom: escapeHtml(prenom), 
+                mail: escapeHtml(mail), 
+                age: ageInt 
+            }
         });
 
         console.log(`Employé ID ${employeId} mis à jour avec succès.`);
@@ -86,9 +151,6 @@ employeeRouter.post('/editEmploye/:id', authguard, async (req, res) => {
     }
 });
 
-
-
-// Route pour supprimer un employé
 employeeRouter.post('/deleteEmploye', authguard, async (req, res) => {
     try {
         const employeId = parseInt(req.body.employeId, 10);

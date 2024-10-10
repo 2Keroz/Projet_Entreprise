@@ -72,4 +72,28 @@
 
 </body>
 </div>
+
+{% if errors %}
+<div class="error-container">
+    {% for key, error in errors %}
+        <p class="error-message">{{ error }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+<script>
+    // Disparition du cadre d'erreur après 5 secondes
+    setTimeout(() => {
+        const errorContainer = document.getElementById('error-container');
+        if (errorContainer) {
+            errorContainer.style.opacity = '0';
+            setTimeout(() => {
+                errorContainer.style.display = 'none';
+            }, 500); // Attendre que l'animation d'opacité se termine
+        }
+    }, 5000); // Temps en millisecondes (5000 ms = 5 secondes)
+</script>
+
 {% endblock %}

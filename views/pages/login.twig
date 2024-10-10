@@ -2,7 +2,7 @@
 
 {% block style %}
 	<link rel="stylesheet" href="/assets/css/login.css">
-		<link rel="stylesheet" href="/assets/css/general.css">
+	<link rel="stylesheet" href="/assets/css/general.css">
 {% endblock %}
 
 {% block title %}
@@ -14,7 +14,7 @@
 		<body class="align">
 
 			<div class="grid">
-	<h1>Se connecter</h1>
+				<h1>Se connecter</h1>
 				<form action="/login" method="POST" class="form login">
 
 					<div class="form__field">
@@ -66,4 +66,22 @@
 		</body>
 	</div>
 
-</body>{% endblock %}
+</body>
+{% if error %}
+	<div class="error-container" id="error-container">
+		<p class="error-message">{{ error }}</p>
+	</div>
+{% endif %}
+
+<script>
+	// Disparition du cadre d'erreur après 5 secondes
+setTimeout(() => {
+const errorContainer = document.getElementById('error-container');
+if (errorContainer) {
+errorContainer.style.opacity = '0';
+setTimeout(() => {
+errorContainer.style.display = 'none';
+}, 500);
+}
+}, 5000);
+</script>{% endblock %}

@@ -247,3 +247,19 @@ h1{
   color: #044299;
   /* Change la couleur au survol */
 }
+
+.error-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffdddd;
+  border: 1px solid #f44336;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 300px;
+  transition: opacity 0.5s ease;
+}
+.error-message {
+  color: #f44336;
+  margin: 5px 0;
+}

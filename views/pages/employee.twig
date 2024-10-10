@@ -1,71 +1,81 @@
 {% extends "../layouts/base.twig" %}
 
 {% block style %}
-	<link rel="stylesheet" href="/assets/css/employee.css">
-		<link rel="stylesheet" href="/assets/css/general.css">
+    <link rel="stylesheet" href="/assets/css/employee.css">
+    <link rel="stylesheet" href="/assets/css/general.css">
 {% endblock %}
 
-
 {% block title %}
-	<title>Ajouter un employé</title>
+    <title>Ajouter un employé</title>
 {% endblock %}
 
 {% block main %}
-<div class="header">
-            <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
-        </div>
-	<div class="container">
-		<body class="align">
-			<div class="grid">
-				<h1>Ajouter un employé</h1>
-				<form
-					action="/employe" method="POST" class="form login">
-					{# Prénom  #}
-					<div class="form__field">
+    <div class="header">
+        <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
+    </div>
+    <div class="container">
+        <body class="align">
+            <div class="grid">
+                <h1>Ajouter un employé</h1>
+                <form action="/employe" method="POST" class="form login">
+                    {# Prénom  #}
+                    <div class="form__field">
+                        <span class="hidden">Prénom</span>
+                        <input autocomplete="prenom" id="prenom" type="text" name="prenom" class="form__input" placeholder="Prénom" required pattern="^[a-zA-ZÀ-ÿ-' ]{2,50}$">
+                    </div>
+                    {# Nom  #}
+                    <div class="form__field">
+                        <span class="hidden">Nom</span>
+                        <input autocomplete="nom" id="nom" type="text" name="nom" class="form__input" placeholder="nom" required pattern="^[a-zA-ZÀ-ÿ-' ]{2,50}$">
+                    </div>
+                    {# Age  #}
+                    <div class="form__field">
+                        <span class="hidden">Age</span>
+                        <input autocomplete="age" id="age" type="number" name="age" class="form__input" placeholder="Âge" required min="18" max="100">
+                    </div>
+                    {# Mail  #}
+                    <div class="form__field">
+                        <span class="hidden">Mail</span>
+                        <input autocomplete="mail" id="mail" type="text" name="mail" class="form__input" placeholder="mail@mail.com" required pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$">
+                    </div>
+                    <div class="form__field">
+                        <span class="hidden">Password</span>
+                        <input id="password" type="password" name="password" class="form__input" placeholder="Password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
+                    </div>
+                    <div class="form__field">
+                        <span class="hidden">Password</span>
+                        <input id="confirm_password" type="password" name="confirm_password" class="form__input" placeholder="Confirm Password" required>
+                    </div>
 
-						<span class="hidden">Prénom</span>
-						<input autocomplete="prenom" id="prenom" type="text" name="prenom" class="form__input" placeholder="Prénom" required>
-					</div>
-					{# Nom  #}
-					<div class="form__field">
+                    <input type="hidden" name="entrepriseId" value="{{ entreprise.id }}">
+                    <p>Entreprise : {{ entreprise.raisonSociale }}</p>
 
-						<span class="hidden">Nom</span>
-						<input autocomplete="nom" id="nom" type="text" name="nom" class="form__input" placeholder="nom" required>
-					</div>
-					{# Age  #}
-					<div class="form__field">
+                    <input type="submit" value="Créer l'employé">
+                </form>
+            </div>
+        </body>
+    </div>
 
+    {% if errors %}
+    <div class="error-container" id="error-container">
+        {% for key, error in errors %}
+            <p class="error-message">{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}
 
-						<span class="hidden">Age</span>
-						<input autocomplete="age" id="age" type="number" name="age" class="form__input" placeholder="Âge" required>
-					</div>
-					{# Mail  #}
-
-					<div class="form__field">
-
-						<span class="hidden">Mail</span>
-						<input autocomplete="mail" id="mail" type="text" name="mail" class="form__input" placeholder="mail@mail.com" required>
-					</div>
-
-					<div class="form__field">
-						<span class="hidden">Password</span>
-					</label>
-					<input id="password" type="password" name="password" class="form__input" placeholder="Password" required>
-				</div>
-
-				<div class="form__field">
-					<span class="hidden">Password</span>
-				</label>
-				<input id="confirm_password" type="password" name="confirm_password" class="form__input" placeholder="Confirm Password" required>
-			</div>
-
-
-			<input type="hidden" name="entrepriseId" value="{{ entreprise.id }}">
-			<p>Entreprise :
-				{{ entreprise.raisonSociale }}</p>
-
-			<input type="submit" value="Créer l'employé">
-		</body>
-	</form>
-
-</div></body></div>{% endblock %}
+{% block script %}
+    <script>
+        // Disparition du cadre d'erreur après 5 secondes
+        setTimeout(() => {
+            const errorContainer = document.getElementById('error-container');
+            if (errorContainer) {
+                errorContainer.style.opacity = '0';
+                setTimeout(() => {
+                    errorContainer.style.display = 'none';
+                }, 500);
+            }
+        }, 5000);
+    </script>
+{% endblock %}

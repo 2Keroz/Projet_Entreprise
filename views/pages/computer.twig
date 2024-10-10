@@ -24,7 +24,7 @@
 					<div class="form__field">
 
 						<span class="hidden">Adresse Mac</span>
-						<input autocomplete="adresseMac" id="adresseMac" type="text" name="adresseMac" class="form__input" placeholder="00:00:00:00:00" required>
+						<input autocomplete="adresseMac" id="adresseMac" type="text" name="adresseMac" class="form__input" placeholder="00:00:00:00:00:00" required>
 					</div>
 					{# Adresse  #}
 					<div class="form__field">
@@ -49,4 +49,25 @@
 			</div>
 		</body>
 	</div>
+
+	{% if error %}
+    <div class="error-container" id="error-container">
+        <p class="error-message">{{ error }}</p>
+    </div>
+    {% endif %}
+
+{% endblock %}
+{% block script %}
+    <script>
+        // Disparition du cadre d'erreur après 5 secondes
+        setTimeout(() => {
+            const errorContainer = document.getElementById('error-container');
+            if (errorContainer) {
+                errorContainer.style.opacity = '0';
+                setTimeout(() => {
+                    errorContainer.style.display = 'none';
+                }, 500);
+            }
+        }, 5000);
+    </script>
 {% endblock %}

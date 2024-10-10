@@ -2,15 +2,15 @@
 
 {% block style %}
 	<link rel="stylesheet" href="/assets/css/editemployee.css">
-		<link rel="stylesheet" href="/assets/css/general.css">
+	<link rel="stylesheet" href="/assets/css/general.css">
 {% endblock %}
 {% block title %}
 	<title>Modifier un employé</title>
 {% endblock %}
 {% block main %}
-<div class="header">
-            <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
-        </div>
+	<div class="header">
+		<a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
+	</div>
 	<div class="container">
 		<body class="align">
 			<div class="grid">
@@ -27,14 +27,14 @@
 					<div class="form__field">
 
 						<span class="hidden">Nom</span>
-						<input autocomplete="nom" id="nom" type="text" name="nom" class="form__input"  value="{{ employe.nom }}" required>
+						<input autocomplete="nom" id="nom" type="text" name="nom" class="form__input" value="{{ employe.nom }}" required>
 					</div>
 					{# Age  #}
 					<div class="form__field">
 
 
 						<span class="hidden">Age</span>
-						<input autocomplete="age" id="age" type="number" name="age" class="form__input"  value="{{ employe.age }}" required>
+						<input autocomplete="age" id="age" type="number" name="age" class="form__input" value="{{ employe.age }}" required>
 					</div>
 					{# Mail  #}
 
@@ -43,9 +43,24 @@
 						<span class="hidden">Mail</span>
 						<input autocomplete="mail" id="mail" type="text" name="mail" class="form__input" value="{{ employe.mail }}" required>
 					</div>
-			<input type="submit" value="Modifier l'employé">
+					<input type="submit" value="Modifier l'employé">
+				</body>
+			</form>
 		</body>
-	</form>
-
-</div></body></div>
-{% endblock %}
+	</div>
+</body></div>{% if errors %}
+<div class="error-container" id="error-container">
+	{% for key, error in errors %}
+		<p class="error-message">{{ error }}</p>
+	{% endfor %}
+</div>{% endif %}{% endblock %}{% block script %}<script>
+// Disparition du cadre d'erreur après 5 secondes
+setTimeout(() => {
+const errorContainer = document.getElementById('error-container');
+if (errorContainer) {
+errorContainer.style.opacity = '0';
+setTimeout(() => {
+errorContainer.style.display = 'none';
+}, 500);
+}
+}, 5000);</script>{% endblock %}
