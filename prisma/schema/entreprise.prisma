@@ -1,0 +1,9 @@
+model Entreprise {
+  id            Int          @id @default(autoincrement())
+  siret         String       @unique
+  raisonSociale String
+  motDePasse    String
+  createdAt     DateTime     @default(now())
+  ordinateurs   Ordinateur[] @relation("EntrepriseOrdinateurs")
+  employes      Employe[]    @relation("EntrepriseEmployes")
+}

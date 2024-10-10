@@ -1,0 +1,51 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/editemployee.css">
+		<link rel="stylesheet" href="/assets/css/general.css">
+{% endblock %}
+{% block title %}
+	<title>Modifier un employé</title>
+{% endblock %}
+{% block main %}
+<div class="header">
+            <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
+        </div>
+	<div class="container">
+		<body class="align">
+			<div class="grid">
+				<h1>Modifier un employé</h1>
+				<form
+					action="/editEmploye/{{ employe.id }}" method="POST" class="form login">
+					{# Prénom  #}
+					<div class="form__field">
+
+						<span class="hidden">Prénom</span>
+						<input autocomplete="prenom" id="prenom" type="text" name="prenom" class="form__input" value="{{ employe.prenom }}" required>
+					</div>
+					{# Nom  #}
+					<div class="form__field">
+
+						<span class="hidden">Nom</span>
+						<input autocomplete="nom" id="nom" type="text" name="nom" class="form__input"  value="{{ employe.nom }}" required>
+					</div>
+					{# Age  #}
+					<div class="form__field">
+
+
+						<span class="hidden">Age</span>
+						<input autocomplete="age" id="age" type="number" name="age" class="form__input"  value="{{ employe.age }}" required>
+					</div>
+					{# Mail  #}
+
+					<div class="form__field">
+
+						<span class="hidden">Mail</span>
+						<input autocomplete="mail" id="mail" type="text" name="mail" class="form__input" value="{{ employe.mail }}" required>
+					</div>
+			<input type="submit" value="Modifier l'employé">
+		</body>
+	</form>
+
+</div></body></div>
+{% endblock %}

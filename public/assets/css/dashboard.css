@@ -1,0 +1,227 @@
+/* Base styles */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Open Sans", sans-serif;
+    background-color: #2c3338;
+    color: #eee;
+}
+
+/* Container principal pour le tableau de bord */
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+}
+
+/* Barre latérale gauche */
+.sidebar {
+    width: 250px;
+    background-color: #2c3338;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 100px;
+    transition: width 0.4s ease, padding 0.4s ease, margin-left 0.4s ease; /* Ajout de margin-left */
+    justify-content: space-between;
+}
+
+
+#sidebar > div{
+    width: 250px;
+}
+
+/* Liens dans la barre latérale */
+.sidebar a {
+    display: block;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: #eee;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    background-color: transparent;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #044299;
+}
+
+/* Contenu principal */
+.content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #3b4148;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+/* Global container for employees and computers */
+.global {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    /* Permet aux containers de s'adapter si l'espace manque */
+}
+
+/* Container général */
+.container {
+    background-color: #434a52;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+/* Alignement des titres */
+
+.modify {
+    font-size: 13.3333px;
+    font-family: Arial;
+    margin: 8px 0px 0px;
+    margin-top: 0.5rem;
+}
+
+h1 {
+    color: #065ed8;
+    text-align: center;
+    margin-bottom: 3rem;
+
+}
+
+h2 {
+    color: #065ed8;
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+/* Paragraphes */
+p {
+    margin: 0.5rem 0;
+}
+
+/* Boutons */
+button {
+    cursor: pointer;
+    background-color: #065ed8;
+    color: #eee;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+    width: auto;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background-color: #044299;
+}
+
+/* Formulaires */
+form {
+    margin-bottom: 1rem;
+}
+
+/* Sélecteurs */
+select {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    background-color: #3b4148;
+    color: #eee;
+    border: 1px solid #434a52;
+    border-radius: 0.25rem;
+}
+
+select:focus {
+    outline: none;
+    border-color: #065ed8;
+}
+
+/* Liens dans le contenu */
+a {
+    color: #eee;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    background-color: #065ed8;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #044299;
+}
+
+/* Individual employee/computer cards */
+.container>div {
+    background-color: #3b4148;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Alignement du texte centré */
+.text--center {
+    text-align: center;
+}
+
+/* Styles spécifiques aux boutons dans les cartes employé/ordinateur */
+.btn {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+
+.logout {
+    margin-top: auto;
+    color: #065ed8;
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+/* Bouton pour masquer/afficher la barre latérale */
+.toggle-btn {
+    position: absolute;
+    top: 1px;
+    left: 230px;
+    background-color: #065ed8;
+    color: #eee;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: left 0.5s;
+}
+
+/* Styles quand la barre latérale est repliée */
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: width 0.5s;
+    margin-left: 60px;
+    transition: width 0.4s ease, padding 0.4s ease, margin-left 0.4s ease; /* Ajout de margin-left */
+}
+
+#sidebar{
+    overflow: hidden;
+}
+
+/* Ajustement de la position du bouton quand la barre latérale est repliée */
+.sidebar.collapsed + .toggle-btn {
+    left: 6px;
+    transform: rotate(180deg);
+}
+
+/* Ajustement de la largeur du contenu quand la barre latérale est repliée */
+.content.expanded {
+    transition: margin-right 0.3s;
+}

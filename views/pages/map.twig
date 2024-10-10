@@ -1,0 +1,58 @@
+{# views/pages/map.twig #}
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/map.css">
+    	<link rel="stylesheet" href="/assets/css/general.css">
+{% endblock %}
+
+{% block title %}
+    <title>Carte des Ordinateurs</title>
+{% endblock %}
+
+{% block main %}
+<div class="header">
+            <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
+        </div>
+    <div class="map-page">
+        <h1>Localiser les Ordinateurs</h1>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <script>
+        const ordinateurs = {{ ordinateurs|json_encode|raw }};
+        const map = L.map('map').setView([46.6034, 1.8883], 5); // Coordonnées par défaut
+
+        // Charger les tuiles de la carte
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        ordinateurs.forEach(ordinateur => {
+            const adresse = ordinateur.adresse; // Adresse de l'ordinateur
+            
+            // Utiliser le service de géocodage Nominatim pour obtenir les coordonnées
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adresse)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const lat = data[0].lat;
+                        const lon = data[0].lon;
+                        
+                        // Créer un marqueur sur la carte
+                        const marker = L.marker([lat, lon]).addTo(map)
+                            .bindPopup(ordinateur.designation); // Info-bulle avec la désignation de l'ordinateur
+                    } else {
+                        console.error("Adresse non trouvée : " + adresse);
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        });
+    </script>
+{% endblock %}

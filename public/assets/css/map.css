@@ -1,0 +1,67 @@
+body,html{
+    margin:0;
+    padding:0;
+}
+
+/* Styles de base et alignement pour la page map */
+.map-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    padding: 1rem;
+    background-color: #2c3338;
+    color: #eee;
+}
+
+.map-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    background-color: #3b4148;
+    border-radius: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+/* Styles spécifiques pour la carte */
+#map {
+    flex: 1;
+    border-radius: 0.25rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #434a52;
+}
+
+/* Titres */
+h1 {
+    color: #065ed8;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+
+.header {
+    position: absolute; /* Positionne le header par rapport à la fenêtre */
+    top: -2rem; /* Positionne à 1rem du haut */
+    right: 1rem; /* Positionne à 1rem du bord droit */
+    z-index: 1000; /* Assure que la croix est au-dessus d'autres éléments */
+  }
+  
+  .close-button {
+    color: #065ed8;
+    /* Couleur de la croix */
+    font-size: 5rem;
+    /* Taille de la croix */
+    text-decoration: none;
+    /* Enlève le soulignement */
+    transition: color 0.3s;
+    /* Transition de couleur au survol */
+
+  }
+  
+  .close-button:hover {
+    color: #044299;
+    /* Change la couleur au survol */
+  }

@@ -1,0 +1,132 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/dashboard.css">
+	<link rel="stylesheet" href="/assets/css/general.css">
+{% endblock %}
+
+{% block title %}
+	<title>Dashboard</title>
+{% endblock %}
+
+{% block main %}
+	<div class="dashboard-layout">
+		<div class="sidebar collapsed" id="sidebar">
+			<div>
+				<h1>DASHBOARD</h1>
+				<div id='menu'>
+					<a href="/computer">Add Computer</a>
+					<a href="/employe">Add Employee</a>
+					<a href="/map">MAP</a>
+				</div>
+			</div>
+			<div>
+			<a href="/logout" class="logout">Logout</a>
+			</div>
+		</div>
+		<button id="toggle-sidebar" class="toggle-btn">↤</button>
+		<div class="content">
+			<h1>Dashboard de l'entreprise
+				{{ entreprise.raisonSociale }}</h1>
+			<div class="global">
+				<div class="container">
+					<h2>Employés de l'entreprise</h2>
+					{% if employes and employes|length > 0 %}
+						{% for employe in employes %}
+							<div>
+								<p>Prénom :
+									{{ employe.prenom }}</p>
+								<p>Nom :
+									{{ employe.nom }}</p>
+								<p>Email :
+									{{ employe.mail }}</p>
+								<p>Âge :
+									{{ employe.age }}</p>
+								<div class="btn">
+									<form action="/deleteEmploye" method="POST" style="display: inline;">
+										<input type="hidden" name="employeId" value="{{ employe.id }}">
+										<button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">Supprimer</button>
+										<a href="/editEmploye/{{ employe.id }}" class="modify">Modifier</a>
+									</form>
+
+
+								</div>
+							</div>
+							<br>
+						{% endfor %}
+					{% else %}
+						<p>Aucun employé trouvé pour cette entreprise.</p>
+					{% endif %}
+				</div>
+				<div class="container">
+					<h2>Liste des ordinateurs</h2>
+					{% if ordinateurs and ordinateurs|length > 0 %}
+						{% for ordinateur in ordinateurs %}
+							<div>
+								<p>Adresse MAC :
+									{{ ordinateur.adresseMac }}</p>
+								<p>Désignation :
+									{{ ordinateur.designation }}</p>
+								{% set assignedEmploye = null %}
+								{% for employe in employes %}
+									{% if employe.ordinateurId == ordinateur.id %}
+										{% set assignedEmploye = employe %}
+									{% endif %}
+								{% endfor %}
+								{% if assignedEmploye %}
+									<p>Assigné à :
+										{{ assignedEmploye.prenom }}
+										{{ assignedEmploye.nom }}</p>
+									<form action="/unassignComputer" method="POST" style="display: inline;">
+										<input type="hidden" name="ordinateurId" value="{{ ordinateur.id }}">
+										<button type="submit">Désassigner</button>
+									</form>
+								{% else %}
+									<form action="/assignComputer" method="POST">
+										<input type="hidden" name="ordinateurId" value="{{ ordinateur.id }}">
+										<select name="employeId" required>
+											<option value="">-- Sélectionner un employé --</option>
+											{% for employe in employes %}
+												{% if not employe.ordinateurId %}
+													<option value="{{ employe.id }}">{{ employe.prenom }}
+														{{ employe.nom }}</option>
+												{% endif %}
+											{% endfor %}
+										</select>
+										<button type="submit">Assigner</button>
+									</form>
+								{% endif %}
+								<form action="/deleteComputer" method="POST" style="display: inline;">
+									<input type="hidden" name="ordinateurId" value="{{ ordinateur.id }}">
+									<button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet ordinateur ?');">Supprimer</button>
+								</form>
+							</div>
+							<br>
+						{% endfor %}
+					{% else %}
+						<p>Aucun ordinateur trouvé pour cette entreprise.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+    document.getElementById('toggle-sidebar').addEventListener('click', function () {
+        const sidebar = document.getElementById('sidebar');
+        const content = document.querySelector('.content');
+
+        // Basculer la classe "collapsed" pour ouvrir/fermer la sidebar
+        sidebar.classList.toggle('collapsed');
+
+        // Utiliser un setTimeout pour donner le temps à la sidebar de se replier avant de modifier la classe du contenu
+        if (sidebar.classList.contains('collapsed')) {
+            content.classList.remove('expanded'); // Retirer l'expansion lorsque la barre latérale est fermée
+        } else {
+            content.classList.add('expanded'); // Ajouter l'expansion lorsque la barre latérale est ouverte
+        }
+    });
+	</script>
+{% endblock %}

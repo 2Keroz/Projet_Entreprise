@@ -1,0 +1,23 @@
+{
+  "name": "projet-entreprise",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "author": "Lucas",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "twig": "^1.17.1"
+  }
+}

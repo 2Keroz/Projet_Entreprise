@@ -1,0 +1,12 @@
+model Employe {
+  id           Int         @id @default(autoincrement())
+  nom          String
+  prenom       String
+  mail         String      @unique
+  motDePasse   String
+  age          Int
+  ordinateurId Int?        @unique
+  ordinateur   Ordinateur? @relation("OrdinateurEmploye", fields: [ordinateurId], references: [id])
+  entrepriseId Int
+  entreprise   Entreprise  @relation("EntrepriseEmployes", fields: [entrepriseId], references: [id])
+}

@@ -1,0 +1,52 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/computer.css">
+	<link rel="stylesheet" href="/assets/css/general.css">
+{% endblock %}
+
+{% block title %}
+	<title>Ajouter un Ordinateur</title>
+{% endblock %}
+
+{% block main %}
+<div class="header">
+            <a href="/" class="close-button" title="Retourner au tableau de bord">&times;</a>
+        </div>
+	<div class="container">
+		<body class="align">
+				 
+			<div class="grid">
+				<h1>Ajouter un ordinateur</h1>
+				<form
+					action="/computer" method="POST" class="form login">
+					{# Adresse mac  #}
+					<div class="form__field">
+
+						<span class="hidden">Adresse Mac</span>
+						<input autocomplete="adresseMac" id="adresseMac" type="text" name="adresseMac" class="form__input" placeholder="00:00:00:00:00" required>
+					</div>
+					{# Adresse  #}
+					<div class="form__field">
+
+
+						<span class="hidden">Raison Sociale</span>
+						<input autocomplete="adresse" id="adresse" type="text" name="adresse" class="form__input" placeholder="12 rue Marius Arnaud, 13500 Martigues" required>
+					</div>
+					{# Désignation  #}
+
+					<div class="form__field">
+
+						<span class="hidden">Raison Sociale</span>
+						<input autocomplete="designation" id="designation" type="text" name="designation" class="form__input" placeholder="PC Salle n°1" required>
+					</div>
+
+					<div class="form__field">
+						<input type="submit" value="Créer le PC">
+					</div>
+				</form>
+
+			</div>
+		</body>
+	</div>
+{% endblock %}
