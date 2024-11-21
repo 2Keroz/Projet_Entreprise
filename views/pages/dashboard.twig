@@ -45,7 +45,7 @@
 								<div class="btn">
 									<form action="/deleteEmploye" method="POST" style="display: inline;">
 										<input type="hidden" name="employeId" value="{{ employe.id }}">
-										<button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">Supprimer</button>
+										<button type="submit">Supprimer</button>
 										<a href="/editEmploye/{{ employe.id }}" class="modify">Modifier</a>
 									</form>
 
@@ -98,7 +98,7 @@
 								{% endif %}
 								<form action="/deleteComputer" method="POST" style="display: inline;">
 									<input type="hidden" name="ordinateurId" value="{{ ordinateur.id }}">
-									<button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet ordinateur ?');">Supprimer</button>
+									<button type="submit">Supprimer</button>
 								</form>
 							</div>
 							<br>

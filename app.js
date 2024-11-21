@@ -12,7 +12,7 @@ const computerRouter = require("./router/computerRouter");
 // EmployeeRouter
 const employeeRouter = require("./router/employe/employeeRouter");
 const mapRouter = require("./router/mapRouter");
-
+require("dotenv").config()
 
 
 const app = express(); // on lance le server
@@ -36,6 +36,6 @@ app.use(mapRouter)
 
 
 
-app.listen(3000, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log("Connecté sur le port 3000");  
 })
